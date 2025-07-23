@@ -30,13 +30,18 @@ RUN composer install --optimize-autoloader --no-scripts
 # Copy existing application directory contents
 COPY . /var/www/html
 
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# Copy and set executable permissions for entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set basic ownership (permissions will be set at runtime)
+RUN chown -R www-data:www-data /var/www/html
 
 # Run composer scripts now that artisan exists
 RUN composer dump-autoload --optimize
+
+# Generate application key if not set
+RUN php artisan key:generate --ansi
 
 # Copy Apache virtual host configuration
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
@@ -44,5 +49,5 @@ COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 # Expose port 80
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Start with entrypoint script
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
