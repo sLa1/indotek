@@ -3,6 +3,10 @@ import { Movie, CreateMovieData, PgRating } from '../types/movie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
+// Debug: Log the API URL being used
+console.log('API_URL being used:', API_URL);
+console.log('NEXT_PUBLIC_API_URL env var:', process.env.NEXT_PUBLIC_API_URL);
+
 // Helper function to add mock data for frontend
 const enhanceMovieData = (movie: any): Movie => ({
     ...movie,
