@@ -2,44 +2,25 @@
 
 ## Common Issues and Solutions
 
-### 1. Permission Err### 8. Windows-specific Notesrs During Build
+**Note:** This project now uses a simplified Docker setup. Most complex permission and entrypoint issues have been eliminated by using a straightforward Laravel + Apache configuration.
+
+### 1. Permission Errors During Build
 
 If you encounter permission errors like:
 ```
 ERROR [backend stage-0  9/11] RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html/storage && chmod -R 755 /var/www/html/bootstrap/cache
 ```
 
-**Solution:** The updated Dockerfile now handles permissions at runtime instead of build time to avoid Windows Docker Desktop compatibility issues.
+**Solution:** The simplified Dockerfile now handles permissions in a single step during build time, which works reliably across platforms.
 
-### 2. Bootstrap Cache Directory Error
-
-If you see the error:
-```
-The /var/www/html/bootstrap/cache directory must be present and writable.
-```
-
-**Solution:** The Dockerfile has been updated to create all required Laravel directories before running composer scripts. The fix includes:
-- Creating `bootstrap/cache` directory
-- Creating all necessary `storage` subdirectories
-- Setting proper ownership before composer operations
-
-### 3. Missing Environment File
+### 2. Missing Environment File
 
 Make sure to copy the environment file before building:
 ```bash
 cp backend/.env.example backend/.env
 ```
 
-### 4. Entrypoint Script Not Found Error
-
-If you see the error:
-```
-/usr/local/bin/docker-php-entrypoint: 9: exec: /usr/local/bin/docker-entrypoint.sh: not found
-```
-
-**Solution:** This has been fixed in the updated Dockerfile by ensuring the entrypoint script is copied after the application files to prevent overwriting.
-
-### 5. Docker Compose Version Warning
+### 3. Docker Compose Version Warning
 
 If you see:
 ```
@@ -48,7 +29,7 @@ the attribute `version` is obsolete, it will be ignored, please remove it to avo
 
 **Solution:** The version field has been removed from docker-compose.yml as it's no longer required in modern Docker Compose.
 
-### 6. Build Steps (Updated)
+### 4. Build Steps (Updated)
 
 1. **Clone the repository**
 ```bash
@@ -72,7 +53,7 @@ docker system prune -f
 docker-compose up --build
 ```
 
-### 7. Alternative Build Commands
+### 5. Alternative Build Commands
 
 If the above doesn't work, try building services individually:
 
@@ -87,14 +68,13 @@ docker-compose build frontend
 docker-compose up
 ```
 
-### 5. Windows-specific Notes
+### 6. Windows-specific Notes
 
 - Make sure Docker Desktop is running
 - Ensure WSL2 backend is enabled
 - Try running PowerShell/CMD as Administrator if permission issues persist
-- Consider using WSL2 terminal for Docker commands
 
-### 9. Debugging
+### 7. Debugging
 
 To debug container issues:
 
@@ -108,7 +88,7 @@ docker-compose exec backend bash
 docker-compose exec frontend sh
 ```
 
-### 10. Reset Everything
+### 8. Reset Everything
 
 If all else fails, reset Docker completely:
 
