@@ -5,51 +5,98 @@ This is a full-stack movie management application built with Laravel for the bac
 ## Project Structure
 
 ```
-indotek
-├── backend        # Laravel application
-│   ├── app
-│   │   ├── Http
-│   │   │   └── Controllers
-│   │   │       └── MovieController.php
-│   │   └── Models
-│   │       └── Movie.php
-│   ├── database
-│   │   ├── migrations
-│   │   │   └── create_movies_table.php
-│   │   └── seeders
+indotek/
+├── backend/                    # Laravel 11 API Backend
+│   ├── app/
+│   │   ├── Http/
+│   │   │   ├── Controllers/
+│   │   │   │   ├── BaseController.php
+│   │   │   │   ├── MovieController.php
+│   │   │   │   └── PgRatingController.php
+│   │   │   ├── Requests/
+│   │   │   │   ├── StoreMovieRequest.php
+│   │   │   │   └── UpdateMovieRequest.php
+│   │   │   └── Middleware/
+│   │   ├── Models/
+│   │   │   ├── Movie.php
+│   │   │   └── PgRating.php
+│   │   └── Providers/
+│   │       └── AppServiceProvider.php
+│   ├── bootstrap/
+│   │   ├── app.php
+│   │   └── providers.php
+│   ├── config/                 # Laravel 11 Configuration Files
+│   │   ├── app.php
+│   │   ├── database.php
+│   │   ├── cache.php
+│   │   ├── cors.php
+│   │   ├── filesystems.php
+│   │   ├── logging.php
+│   │   ├── queue.php
+│   │   ├── redis.php
+│   │   └── session.php
+│   ├── database/
+│   │   ├── factories/
+│   │   │   ├── MovieFactory.php
+│   │   │   └── PgRatingFactory.php
+│   │   ├── migrations/
+│   │   │   ├── 2025_07_22_000000_create_pg_ratings_table.php
+│   │   │   └── 2025_07_22_000001_create_movies_table.php
+│   │   └── seeders/
+│   │       ├── DatabaseSeeder.php
+│   │       ├── PgRatingSeeder.php
 │   │       └── MovieSeeder.php
-│   ├── routes
-│   │   └── api.php
+│   ├── routes/
+│   │   ├── api.php
+│   │   ├── console.php
+│   │   └── web.php
+│   ├── tests/
+│   │   ├── Feature/
+│   │   │   ├── MovieApiTest.php
+│   │   │   └── PgRatingApiTest.php
+│   │   └── Unit/
+│   │       ├── MovieTest.php
+│   │       └── PgRatingTest.php
 │   ├── composer.json
+│   ├── phpunit.xml
 │   ├── .env.example
-│   └── Dockerfile
-├── frontend       # Next.js application
-│   ├── src
-│   │   ├── app
+│   ├── Dockerfile
+│   └── apache-config.conf
+├── frontend/                   # Next.js 14 Frontend
+│   ├── src/
+│   │   ├── app/
 │   │   │   ├── page.tsx
-│   │   │   └── movies
+│   │   │   ├── layout.tsx
+│   │   │   ├── globals.css
+│   │   │   └── movies/
 │   │   │       ├── page.tsx
-│   │   │       ├── create
+│   │   │       ├── create/
 │   │   │       │   └── page.tsx
-│   │   │       └── [id]
-│   │   │           └── edit
+│   │   │       └── [id]/
+│   │   │           └── edit/
 │   │   │               └── page.tsx
-│   │   ├── components
+│   │   ├── components/
 │   │   │   ├── MovieForm.tsx
 │   │   │   ├── MovieList.tsx
 │   │   │   ├── MovieCard.tsx
+│   │   │   ├── MovieFilter.tsx
 │   │   │   ├── ModernSearch.tsx
 │   │   │   ├── Modal.tsx
 │   │   │   ├── ConfirmDialog.tsx
 │   │   │   └── Loader.tsx
-│   │   ├── services
+│   │   ├── services/
 │   │   │   └── api.ts
-│   │   └── types
+│   │   └── types/
 │   │       └── movie.ts
 │   ├── package.json
 │   ├── next.config.js
 │   ├── tailwind.config.js
-│   └── Dockerfile
+│   ├── tsconfig.json
+│   ├── postcss.config.js
+│   ├── Dockerfile
+│   ├── Dockerfile.dev
+│   └── .dockerignore
+├── .gitignore
 ├── docker-compose.yml
 └── README.md
 ```
@@ -252,6 +299,34 @@ docker-compose up --build
 ```
 
 ### Development Tips
+
+#### Development Workflow
+This project follows a feature branch workflow:
+
+1. **Create a feature branch for new work:**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes and commit:**
+   ```bash
+   git add .
+   git commit -m "feat: your feature description"
+   ```
+
+3. **Push the feature branch:**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+4. **Create a Pull Request on GitHub**
+5. **After review and testing, merge to main**
+6. **Delete the feature branch after merge**
+
+#### Branch Protection
+- **main branch**: Protected, only accepts merges from feature branches
+- **feature branches**: Where all development work happens
+- All changes must be tested before merging to main
 
 #### Hot Reload
 - Frontend: Changes are automatically reflected (Next.js hot reload)
