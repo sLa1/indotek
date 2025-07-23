@@ -2,7 +2,7 @@
 
 ## Common Issues and Solutions
 
-### 1. Permission Errors During Build
+### 1. Permission Err### 8. Windows-specific Notesrs During Build
 
 If you encounter permission errors like:
 ```
@@ -30,7 +30,25 @@ Make sure to copy the environment file before building:
 cp backend/.env.example backend/.env
 ```
 
-### 4. Build Steps (Updated)
+### 4. Entrypoint Script Not Found Error
+
+If you see the error:
+```
+/usr/local/bin/docker-php-entrypoint: 9: exec: /usr/local/bin/docker-entrypoint.sh: not found
+```
+
+**Solution:** This has been fixed in the updated Dockerfile by ensuring the entrypoint script is copied after the application files to prevent overwriting.
+
+### 5. Docker Compose Version Warning
+
+If you see:
+```
+the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+```
+
+**Solution:** The version field has been removed from docker-compose.yml as it's no longer required in modern Docker Compose.
+
+### 6. Build Steps (Updated)
 
 1. **Clone the repository**
 ```bash
@@ -54,7 +72,7 @@ docker system prune -f
 docker-compose up --build
 ```
 
-### 5. Alternative Build Commands
+### 7. Alternative Build Commands
 
 If the above doesn't work, try building services individually:
 
@@ -76,7 +94,7 @@ docker-compose up
 - Try running PowerShell/CMD as Administrator if permission issues persist
 - Consider using WSL2 terminal for Docker commands
 
-### 6. Debugging
+### 9. Debugging
 
 To debug container issues:
 
@@ -90,7 +108,7 @@ docker-compose exec backend bash
 docker-compose exec frontend sh
 ```
 
-### 7. Reset Everything
+### 10. Reset Everything
 
 If all else fails, reset Docker completely:
 
