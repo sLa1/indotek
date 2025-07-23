@@ -38,11 +38,12 @@ RUN mkdir -p /var/www/html/bootstrap/cache \
     && mkdir -p /var/www/html/storage/framework/views \
     && mkdir -p /var/www/html/storage/logs
 
-# Copy and set executable permissions for entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
 # Set basic ownership (permissions will be set at runtime)
+RUN chown -R www-data:www-data /var/www/html
+
+# Copy and set executable permissions for entrypoint script (after copying app files)
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html
 
 # Run composer scripts now that artisan exists
