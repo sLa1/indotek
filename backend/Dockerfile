@@ -23,14 +23,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Copy composer files first
-COPY composer.json composer.lock* ./
-
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
-
-# Copy application files
+# Copy application files first
 COPY . /var/www/html
+
+# Install PHP dependencies (after copying artisan file)
+RUN composer install --optimize-autoloader --no-dev
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
