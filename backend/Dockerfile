@@ -29,13 +29,13 @@ COPY . /var/www/html
 # Install PHP dependencies (after copying artisan file)
 RUN composer install --optimize-autoloader --no-dev
 
+# Copy environment file and generate key in one step
+RUN cp .env.example .env && php artisan key:generate --ansi
+
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Generate application key
-RUN php artisan key:generate --ansi
 
 # Copy Apache configuration
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
