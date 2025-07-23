@@ -32,6 +32,9 @@ RUN composer install --optimize-autoloader --no-dev
 # Copy environment file and generate key in one step
 RUN cp .env.example .env && php artisan key:generate --ansi
 
+# Run database migrations and seeders (for production)
+RUN php artisan migrate --force && php artisan db:seed --force
+
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
