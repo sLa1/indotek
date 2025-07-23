@@ -45,25 +45,20 @@ fi
 echo "Waiting for database connection..."
 echo "Testing database connectivity..."
 
-# Try to connect with a simple connection test instead of migrate:status
+# Try to connect using Laravel's database connection
 attempt=1
 max_attempts=30
 
-until php -r "
-try {
-    \$pdo = new PDO(getenv('DATABASE_URL') ?: 'pgsql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-    echo 'Database connection successful';
-    exit(0);
-} catch (Exception \$e) {
-    echo 'Database connection failed: '.\$e->getMessage();
-    exit(1);
-}
-" 2>&1; do
+until php artisan db:monitor 2>&1 | grep -q "OK"; do
     echo "Attempt $attempt/$max_attempts: Database not ready, retrying in 5 seconds..."
     if [ $attempt -eq $max_attempts ]; then
         echo "ERROR: Could not connect to database after $max_attempts attempts"
         echo "Current environment variables:"
         env | grep -E "(DATABASE|DB_|PG)" | sort
+        echo "PHP extensions check:"
+        php -m | grep -i pdo
+        echo "Laravel database test:"
+        php artisan db:monitor
         exit 1
     fi
     sleep 5
