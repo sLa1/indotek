@@ -137,6 +137,8 @@ docker-compose up --build
 docker-compose up --build -d
 ```
 
+**Note:** If you encounter build issues (especially on Windows), see `README_DOCKER_TROUBLESHOOTING.md` for solutions.
+
 ### 4. Database Setup (First Time Only)
 The database will be automatically created when PostgreSQL container starts. 
 Wait for all containers to be running, then set up the database:
