@@ -43,9 +43,24 @@ fi
 
 # Wait for database to be ready
 echo "Waiting for database connection..."
-until php artisan migrate:status > /dev/null 2>&1; do
-    echo "Database not ready, retrying in 2 seconds..."
-    sleep 2
+echo "Testing database connectivity..."
+
+# Try to connect with a longer timeout and more detailed error reporting
+attempt=1
+max_attempts=30
+
+until php artisan migrate:status 2>&1; do
+    echo "Attempt $attempt/$max_attempts: Database not ready, retrying in 5 seconds..."
+    if [ $attempt -eq $max_attempts ]; then
+        echo "ERROR: Could not connect to database after $max_attempts attempts"
+        echo "Current environment variables:"
+        env | grep -E "(DATABASE|DB_|PG)" | sort
+        echo "Laravel database config test:"
+        php artisan config:show database
+        exit 1
+    fi
+    sleep 5
+    attempt=$((attempt + 1))
 done
 echo "Database connection established!"
 
