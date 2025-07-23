@@ -11,14 +11,26 @@ ERROR [backend stage-0  9/11] RUN chown -R www-data:www-data /var/www/html && ch
 
 **Solution:** The updated Dockerfile now handles permissions at runtime instead of build time to avoid Windows Docker Desktop compatibility issues.
 
-### 2. Missing Environment File
+### 2. Bootstrap Cache Directory Error
+
+If you see the error:
+```
+The /var/www/html/bootstrap/cache directory must be present and writable.
+```
+
+**Solution:** The Dockerfile has been updated to create all required Laravel directories before running composer scripts. The fix includes:
+- Creating `bootstrap/cache` directory
+- Creating all necessary `storage` subdirectories
+- Setting proper ownership before composer operations
+
+### 3. Missing Environment File
 
 Make sure to copy the environment file before building:
 ```bash
 cp backend/.env.example backend/.env
 ```
 
-### 3. Build Steps (Updated)
+### 4. Build Steps (Updated)
 
 1. **Clone the repository**
 ```bash
@@ -42,7 +54,7 @@ docker system prune -f
 docker-compose up --build
 ```
 
-### 4. Alternative Build Commands
+### 5. Alternative Build Commands
 
 If the above doesn't work, try building services individually:
 

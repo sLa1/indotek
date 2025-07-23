@@ -30,6 +30,14 @@ RUN composer install --optimize-autoloader --no-scripts
 # Copy existing application directory contents
 COPY . /var/www/html
 
+# Create Laravel required directories before running composer scripts
+RUN mkdir -p /var/www/html/bootstrap/cache \
+    && mkdir -p /var/www/html/storage/app/public \
+    && mkdir -p /var/www/html/storage/framework/cache \
+    && mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && mkdir -p /var/www/html/storage/logs
+
 # Copy and set executable permissions for entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
