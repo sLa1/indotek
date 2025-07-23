@@ -32,13 +32,13 @@ RUN composer install --optimize-autoloader --no-dev
 # Copy environment file and generate key in one step
 RUN cp .env.example .env && php artisan key:generate --ansi
 
-# Run database migrations and seeders (for production)
-RUN php artisan migrate --force && php artisan db:seed --force
-
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
+
+# Make the entrypoint script executable
+RUN chmod +x /var/www/html/scripts/docker-entrypoint.sh
 
 # Copy Apache configuration
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
@@ -46,5 +46,5 @@ COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 # Expose port 80
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Use custom entrypoint from scripts directory
+ENTRYPOINT ["/var/www/html/scripts/docker-entrypoint.sh"]
